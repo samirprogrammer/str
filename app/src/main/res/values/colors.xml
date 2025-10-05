@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="buttonface_picture" format="reference"/>
+    <color name="primaryBk">#202125</color>
+    <color name="primaryDarkBk">#141414</color>
+    <color name="dark_1">#00796B</color>
+    <color name="dark_2">#3b3b3b</color>
+    <color name="dark_3">#202125</color>
+    <color name="dark_4">#c3c3c3</color>
+    <color name="lightblack">#2b1d1d</color>
+    <color name="primary">#FF009DD6</color>
+    <color name="pink">#fc036f</color>
+    <color name="textcolor">#f3f0e8</color>
+    <color name="primaryDark">#FF009DD6</color>
+    <color name="accent">#eeff41</color>
+    <color name="accentLight">#f4ff81</color>
+    <color name="white">#FFF</color>
+    <color name="whitedark">#EEEEEE</color>
+    <color name="nav">#00796B</color>
+</resources>

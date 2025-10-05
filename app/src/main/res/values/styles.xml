@@ -1,0 +1,176 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>-->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textColorPrimary">@color/whitedark</item>
+        <item name="colorTextBG">@color/pink</item>
+        <!-- subtitle text color -->
+        <item name="android:textColorSecondary">?android:textColorPrimary</item>
+        <item name="titleTextColor">@android:color/white</item>
+        <item name="subtitleTextColor">@android:color/white</item>
+        <item name="android:itemBackground">#FFF</item>
+        <item name="android:actionMenuTextColor">#2E7D32</item>
+        <item name="actionMenuTextAppearance">@style/ActionMenuTextAppearance</item>
+        <item name="android:actionMenuTextAppearance">@style/ActionMenuTextAppearance</item>
+        <item name="android:itemTextAppearance">@style/Style_TextView</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+      <!--  <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        &lt;!&ndash;For compatibility&ndash;&gt;
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="windowActionBarOverlay">true</item>-->
+
+
+    </style>
+    <style name="MyActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">@color/primary</item>
+        <!--For compatibility-->
+        <item name="background">@color/primary</item>
+    </style>
+    <style name="Style_TextView">
+        <item name="fontFamily">@font/angella</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="ActionMenuTextAppearance" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textSize">10sp</item>
+        <item name="fontFamily">@font/angella</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="fontFamily">@font/angella</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="fontFamily">@font/angella</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="AlertDialogCustom2" parent="@android:style/Theme.Dialog">
+        <item name="android:textColor">#4e342e</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColorPrimary">#4e342e</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <!-- No backgrounds, titles or window float -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="buttonBarNegativeButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNeutralButtonStyle">@style/PositiveButtonStyle</item>
+
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Theme" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#ffffffff</item>
+
+    </style>
+
+    <style name="AppTheme25" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimaryDark1">@color/whitedark</item>
+        <item name="colorPrimaryDark2">@color/primary</item>
+        <item name="colorPrimaryTheme">@color/primary</item>
+        <item name="colorPrimaryTheme2">@color/primary</item>
+    </style>
+
+    <style name="AppTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="my_drawable">@drawable/shadow_rect</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary</item>
+        <item name="colorPrimaryDark2">@color/whitedark</item>
+        <item name="android:textColor">@color/whitedark</item>
+        <item name="android:textColorPrimary">@color/whitedark</item>
+        <!-- subtitle text color -->
+        <item name="android:textColorSecondary">@color/whitedark</item>
+        <item name="titleTextColor">@color/whitedark</item>
+        <item name="subtitleTextColor">@color/whitedark</item>
+        <item name="android:actionBarStyle">@style/AppTheme2.ActionBar</item>
+        <item name="android:itemBackground">@color/primary</item>
+        <item name="android:fontFamily">@font/angella</item>
+        <item name="colorPrimaryTheme">@color/primary</item>
+        <item name="colorTextBG">@color/pink</item>
+        <item name="colorPrimaryTheme2">@color/primary</item>
+        <item name="colorPrimaryDark1">@color/whitedark</item>
+        <item name="android:itemTextAppearance">@style/Style_TextView</item>
+        <!--<item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        &lt;!&ndash;For compatibility&ndash;&gt;
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="windowActionBarOverlay">true</item>-->
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <attr name="colorPrimaryTheme" format="reference" />
+    <attr name="colorTextBG" format="reference" />
+    <attr name="colorPrimaryTheme2" format="reference" />
+    <attr name="colorPrimaryDark1" format="reference" />
+    <attr name="colorPrimaryDark2" format="reference" />
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+    <style name="AppThemeDark" parent="Theme.AppCompat.DayNight">
+        <item name="colorPrimaryDark1">@color/whitedark</item>
+        <item name="colorPrimaryDark2">@color/dark_2</item>
+        <item name="colorPrimaryTheme">@color/primaryDarkBk</item>
+        <item name="colorPrimaryTheme2">@color/primaryDarkBk</item>
+        <item name="colorTextBG">@color/dark_2</item>
+        <item name="colorPrimary">@color/primaryDarkBk</item>
+        <item name="colorPrimaryDark">@color/primaryDarkBk</item>m
+        <item name="android:textColor">@color/dark_4</item>
+        <item name="android:textColorPrimary">@color/dark_4</item>
+
+        <!-- subtitle text color -->
+        <item name="android:textColorSecondary">@color/dark_4</item>
+        <item name="titleTextColor">@color/dark_4</item>
+        <item name="subtitleTextColor">@color/dark_4</item>
+        <item name="android:actionBarStyle">@style/AppTheme2.ActionBar</item>
+        <item name="android:itemBackground">@color/primaryDarkBk</item>
+        <item name="android:fontFamily">@font/tenderness</item>
+        <item name="android:itemTextAppearance">@style/Style_TextView</item>
+       <!-- <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        &lt;!&ndash;For compatibility&ndash;&gt;
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="windowActionBarOverlay">true</item>-->
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="TextAppearance.TabsFont" parent="android:TextAppearance">
+
+        <item name="android:textSize">2sp</item>
+    </style>
+
+    <style name="collapsed_app_bar" parent="@android:style/TextAppearance">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
+        <item name="android:textColor">#000</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColorPrimary">#000</item>
+        <item name="colorPrimary">#000</item>
+        <item name="android:textColorAlertDialogListItem">#000</item>
+    </style>
+
+    <style name="AppTheme2.ActionBar">
+        <item name="android:titleTextStyle">@style/AppTheme2.Styled.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="AppTheme2.Styled.ActionBar.TitleTextStyle" parent="@android:style/Widget.TextView"></style>
+</resources>

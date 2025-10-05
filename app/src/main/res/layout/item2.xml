@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"  android:orientation="horizontal" android:padding="3dp"
+    android:layout_height="fill_parent" android:background="#E0E0E0">
+    <ImageView
+        android:id="@+id/story2"
+        android:layout_width="80dp" android:src="@drawable/ic_launcher"
+        android:layout_height="60dp"
+
+        />
+    <TextView
+        android:id="@+id/txt233" android:textColor="?attr/colorPrimaryDark1" android:paddingLeft="5dp"
+        android:layout_width="wrap_content"  android:text="fsdaf" android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+
+</LinearLayout>

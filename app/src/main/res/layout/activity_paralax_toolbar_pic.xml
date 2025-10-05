@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools = "http://schemas.android.com/tools"
+    android:layout_width = "match_parent"
+    android:gravity = "center"  android:id="@+id/cor"
+    android:layout_height = "match_parent"
+    android:orientation = "vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="55dp"
+        android:paddingTop="20dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="222dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:collapsedTitleTextAppearance="@style/collapsed_app_bar"
+            app:contentScrim="@color/primaryBk"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:statusBarScrim="@android:color/transparent">
+
+            <ImageView
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:fitsSystemWindows="true"
+                android:scaleType="fitXY"  />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                fitsSystemWindows="true"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_marginTop="20dp"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/myFabFav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:scaleType="center"
+        android:src="@drawable/outline_star_white_48"
+        app:backgroundTint="@color/nav"
+        app:fabCustomSize="32dp"
+        app:layout_anchor="@+id/appbar"
+        app:layout_anchorGravity="bottom|right|end"
+        app:maxImageSize="20dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/myFabShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_share_white_24dp"
+        app:backgroundTint="@color/nav"
+        app:fabCustomSize="32dp"
+        app:layout_anchor="@+id/appbar"
+        app:layout_anchorGravity="bottom|left|end"
+        app:maxImageSize="20dp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/myFabNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:scaleType="center"
+        android:src="@drawable/outline_navigate_next_white_48"
+        app:backgroundTint="@color/nav"
+        app:fabCustomSize="32dp"
+        app:layout_anchor="@+id/appbar"
+        app:layout_anchorGravity="center|right|end"
+        app:maxImageSize="24dp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/myFabPrev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:scaleType="center"
+        android:src="@drawable/outline_chevron_left_white_48"
+        app:backgroundTint="@color/nav"
+        app:fabCustomSize="32dp"
+        app:layout_anchor="@+id/appbar"
+        app:layout_anchorGravity="center|left|end"
+        app:maxImageSize="24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/myFabFont"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/outline_text_fields_white_48"
+        app:backgroundTint="@color/nav"
+        app:fabCustomSize="32dp"
+        app:layout_anchor="@+id/appbar"
+        app:layout_anchorGravity="bottom|center_horizontal"
+        app:maxImageSize="20dp" />
+
+    <FrameLayout
+        android:id="@+id/ad_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true" />
+</LinearLayout>

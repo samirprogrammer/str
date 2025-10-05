@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="230dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+
+    android:textAlignment="center">
+
+    <ImageView
+        android:id="@+id/catThumb"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:paddingLeft="5dp"
+        android:src="@drawable/elephant"
+        android:translationZ="6dp" />
+
+    <com.google.android.material.card.MaterialCardView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardCatMain"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:theme="@style/Theme.MaterialComponents.DayNight"
+        ads:cardBackgroundColor="#fc036f"
+        ads:strokeColor="#fff"
+        ads:strokeWidth="2dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        app:cardMaxElevation="5dp">
+
+        <TextView
+            android:id="@+id/txtCatTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/angella"
+            android:paddingLeft="55dp"
+            android:paddingTop="15dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="15dp"
+            android:text="Panchtatra "
+            android:textColor="@color/textcolor"
+
+            />
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

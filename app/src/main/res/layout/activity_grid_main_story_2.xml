@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parentLayout"
+    android:layout_width="190dp"
+    android:layout_height="140dp"
+    android:layout_gravity="center_vertical"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:theme="@style/Theme.MaterialComponents.DayNight"
+        app:strokeColor="#fff"
+        app:strokeWidth="2dp"
+        app:cardBackgroundColor="#fff"
+        android:layout_width="190dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        app:cardMaxElevation="5dp" >
+
+
+        <ImageView
+            android:id="@+id/catThumb"
+            android:padding="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/txtCatTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/catThumb"
+            android:layout_margin="15dp"
+            android:background="@drawable/rounded_corners"
+            android:fontFamily="@font/angella"
+            android:gravity="bottom"
+            android:padding="5dp"
+            android:layout_gravity="bottom"
+            android:text="Hello"
+            android:textSize="14dp"
+            android:textColor="#000000" />
+
+    </com.google.android.material.card.MaterialCardView >
+
+</RelativeLayout>
