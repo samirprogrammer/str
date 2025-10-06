@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rlNew"
+    android:background="@color/primary"
+    android:orientation="vertical">
+
+    <!-- Content -->
+    <GridView
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:numColumns="1"
+        android:stretchMode="columnWidth"
+        android:gravity="center" />
+
+    <!-- Ad Banner -->
+    <FrameLayout
+        android:id="@+id/ad_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
+</LinearLayout>
