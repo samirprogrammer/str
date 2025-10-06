@@ -3,31 +3,34 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#eee"
-    android:orientation="vertical" android:layout_gravity="bottom"
+    android:orientation="vertical"
+    android:layout_gravity="bottom"
     android:gravity="bottom"
-    android:padding="0dp" android:paddingBottom="10dp">
+    android:padding="0dp"
+    android:paddingBottom="@dimen/_10sdp">
 
     <ImageView
         android:id="@+id/flag"
         android:layout_width="wrap_content"
-        android:layout_height="200dp" android:scaleType="fitXY"
+        android:layout_height="@dimen/_200sdp"
+        android:scaleType="fitXY"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-          />
+        android:layout_alignParentRight="true" />
 
     <TextView
-        android:id="@+id/textview2" android:text="asdfs"
+        android:id="@+id/textview2"
+        android:text="asdfs"
         android:layout_width="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="@dimen/_30sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
         android:gravity="bottom"
-        android:layout_height="wrap_content" android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_alignParentBottom="true"
-      android:padding="7dp"
-        android:textSize="16dp"
+        android:padding="@dimen/_7sdp"
+        android:textSize="@dimen/_14sdp"
         android:background="@drawable/rounded_corners"
         android:textColor="#000"
-        />
-
+        android:paddingBottom="@dimen/_10sdp" />
 
 </RelativeLayout>

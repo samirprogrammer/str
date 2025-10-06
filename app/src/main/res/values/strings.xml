@@ -7,9 +7,9 @@
     <string name="expand">Expand/Collapse ActionBar</string>
     <string name="hide">Show/Hide ActionBar when scroll</string>
     <string name="paralax">ActionBar Parallax Animations</string>
-    <string name="admob_banner_id">ca-app-pub-4801686843982324/4627932142</string>
-    <string name="admob_banner_id_main">ca-app-pub-4801686843982324/9736217775</string>
-    <string name="admob_banner_full">ca-app-pub-4801686843982324/8423136100</string>
+    <string name="admob_banner_id"></string>
+    <string name="admob_banner_id_main"></string>
+    <string name="admob_banner_full"></string>
     <string-array name="moreapps">
         <item>ic_nurseries</item>
         <item>ic_abc</item>

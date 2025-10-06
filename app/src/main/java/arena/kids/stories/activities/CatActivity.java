@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -99,12 +101,8 @@ public class CatActivity extends AppCompatActivity {
             // ✅ Take whichever is smaller → avoids emulator exaggeration
            // int topInset = Math.min(statusBars.top, systemSBHeight);
 
-            v.setPadding(
-                    v.getPaddingLeft(),
-                    statusBars.top,
-                    v.getPaddingRight(),
-                    navBars.bottom
-            );
+            v.setPadding(v.getPaddingLeft(), statusBars.top, v.getPaddingRight(), 0);
+
             return WindowInsetsCompat.CONSUMED;
             //return insets;
         });
@@ -157,12 +155,18 @@ public class CatActivity extends AppCompatActivity {
                     .addTestDevice("C1E8777CF5A4E669CCF47AE9B9D33FB1").build();
             mAdView.loadAd(adRequest);
         }*/
-
+        MobileAds.initialize(this, initializationStatus -> {});
         if (adUpgrade == 0) {
             initializeAds();
-        } else {
-            //adLay.setVisibility(View.GONE);
-            //mButtonNoAd.setVisibility(View.GONE);
+
+            // Test: Check container visibility after delay
+            new Handler().postDelayed(() -> {
+                Log.d("AdMob", "Post-delay check - Container visible: " +
+                        (adContainerView != null && adContainerView.getVisibility() == View.VISIBLE));
+                if (adContainerView != null) {
+                    Log.d("AdMob", "Container height: " + adContainerView.getHeight());
+                }
+            }, 2000);
         }
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout
@@ -172,7 +176,7 @@ public class CatActivity extends AppCompatActivity {
         else
             layoutParams.bottomMargin = 0;
         // layoutParams.bottomMargin = getNewHeight();
-        gridView.setLayoutParams(layoutParams);
+       // gridView.setLayoutParams(layoutParams);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle params = new Bundle();
         String pg=pgname.toLowerCase().replace(" ","_").replace("story","").replace("stories","");
@@ -215,7 +219,7 @@ public class CatActivity extends AppCompatActivity {
         Log.i("height-Screen", String.valueOf(dpHeight));
         Log.i("width-Screen", String.valueOf(dpWidth));
 
-        int newHeight = 60;
+        int newHeight = 0;
        /* if (dpHeight > 720)
             newHeight = 90;
         else if (dpHeight <= 720 && dpHeight > 400)
@@ -232,26 +236,154 @@ public class CatActivity extends AppCompatActivity {
     private FrameLayout adContainerView;
     private AdView adView;
 
-    private void loadBanner() {
-        // Create an ad request. Check your logcat output for the hashed device ID
-        // to get test ads on a physical device, e.g.,
-        // "Use AdRequest.Builder.addTestDevice("ABCDE0123") to get test ads on this
-        // device."
-        AdRequest adRequest =
-                new AdRequest.Builder()
-                        .build();
+    private void initializeAds() {
+        MobileAds.initialize(activity, initializationStatus -> {
+            Log.d("AdMob", "✅ Mobile Ads initialized");
+        });
 
-        AdSize adSize = getBannerAdSize();
-        // Step 4 - Set the adaptive ad size on the ad view.
+        RequestConfiguration configuration =
+                new RequestConfiguration.Builder()
+                        .setTestDeviceIds(Arrays.asList(
+                                "EBB40DF168323087C9461BE093AC4ED0",
+                                "22606D3F1E8932B94418861535B62D90",
+                                "C1E8777CF5A4E669CCF47AE9B9D33FB1",
+                                AdRequest.DEVICE_ID_EMULATOR
+                        ))
+                        .build();
+        MobileAds.setRequestConfiguration(configuration);
+
+        adContainerView = findViewById(R.id.ad_view_container);
+
+        // CRITICAL: Set container to VISIBLE and proper height
+        adContainerView.setVisibility(View.VISIBLE);
+
+        // Set minimum height for container
+        //int minHeightInPx = (int) (80 * getResources().getDisplayMetrics().density);
+        //adContainerView.setMinimumHeight(minHeightInPx);
+
+        adView = new AdView(this);
+        adView.setAdUnitId("ca-app-pub-4801686843982324/9736217775"); // Test ID first
+
+        // CRITICAL: Set ad view to VISIBLE immediately
+        adView.setVisibility(View.VISIBLE);
+
+        FrameLayout.LayoutParams adParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+        adParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        adView.setLayoutParams(adParams);
+
+        adContainerView.addView(adView);
+
+        // Load banner after short delay to ensure layout is ready
+        new Handler().postDelayed(() -> {
+            loadBanner();
+        }, 300);
+    }
+
+    private void loadBanner() {
+        Log.d("AdMob", "=== loadBanner() called ===");
+
+        // FORCE VISIBILITY - This is the key fix
+        adContainerView.setVisibility(View.VISIBLE);
+        adView.setVisibility(View.VISIBLE);
+
+        // Use standard banner size first for testing
+        AdSize adSize = getBannerAdSize(); // Use standard 320x50 banner first
+
+        Log.d("AdMob", "Using AdSize: " + adSize);
+
         adView.setAdSize(adSize);
 
+        AdRequest adRequest = new AdRequest.Builder().build();
 
-        // Step 5 - Start loading the ad in the background.
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                Log.d("AdMob", "✅✅✅ BANNER LOADED SUCCESSFULLY");
+
+                // CRITICAL: Force visibility and layout
+                runOnUiThread(() -> {
+                    adContainerView.setVisibility(View.VISIBLE);
+                    adView.setVisibility(View.VISIBLE);
+
+                    // Change colors for visual confirmation
+                   // adContainerView.setBackgroundColor(Color.GREEN);
+                    //adView.setBackgroundColor(Color.YELLOW);
+
+                    // Force layout update
+                    adContainerView.requestLayout();
+                    adView.requestLayout();
+
+                    updateAdMargin(true);
+
+                    // Log final dimensions after layout
+                    adContainerView.post(() -> {
+                        Log.d("AdMob", "After layout - Container: " +
+                                adContainerView.getWidth() + "x" + adContainerView.getHeight());
+                        Log.d("AdMob", "After layout - AdView: " +
+                                adView.getWidth() + "x" + adView.getHeight());
+                    });
+                });
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                Log.e("AdMob", "❌❌❌ BANNER FAILED: " + adError.toString());
+                runOnUiThread(() -> {
+                    updateAdMargin(false);
+                });
+            }
+
+            @Override
+            public void onAdOpened() {
+                Log.d("AdMob", "Ad opened");
+            }
+
+            @Override
+            public void onAdImpression() {
+                Log.d("AdMob", "💰 Ad impression recorded");
+            }
+        });
+
+        Log.d("AdMob", "Starting ad load...");
         adView.loadAd(adRequest);
     }
 
-    private static AdSize getBannerAdSize() {
-        Display display = activity.getWindowManager().getDefaultDisplay();
+    private void updateAdMargin(boolean adVisible) {
+        runOnUiThread(() -> {
+            if (adUpgrade != 0) {
+                adContainerView.setVisibility(View.GONE);
+                return;
+            }
+
+            if (adVisible) {
+                // Calculate proper margin based on ad size
+                int margin = (int) (60 * getResources().getDisplayMetrics().density); // ~60dp
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
+                if (params == null) {
+                    params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                }
+                params.bottomMargin = margin;
+                gridView.setLayoutParams(params);
+
+                Log.d("AdMob", "Set bottom margin: " + margin + "px");
+            } else {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
+                if (params != null) {
+                    params.bottomMargin = 0;
+                    gridView.setLayoutParams(params);
+                }
+            }
+        });
+    }
+    private AdSize getBannerAdSize() {
+        Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
@@ -261,31 +393,9 @@ public class CatActivity extends AppCompatActivity {
         int adWidth = (int) (widthPixels / density);
 
         // Step 3 - Get adaptive ad size and return for setting on the ad view.
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity.getApplicationContext(), adWidth);
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(getApplicationContext(), adWidth);
     }
 
-    private void initializeAds() {
-        RequestConfiguration configuration =
-                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("69CD3CA96CCBE434EA3CB3F94DB40C54")).build();
-        MobileAds.initialize(activity,
-                new OnInitializationCompleteListener() {
-                    @Override
-                    public void onInitializationComplete(InitializationStatus initializationStatus) {
-                    }
-                });
-        MobileAds.setRequestConfiguration(configuration);
-        if (adUpgrade == 0) {
-            adContainerView = findViewById(R.id.ad_view_container);
-            // Step 1 - Create an AdView and set the ad unit ID on it.
-            adView = new AdView(this);
-            adView.setAdUnitId(getString(R.string.admob_banner_id_main));
-            adContainerView.addView(adView);
-
-            loadBanner();
-        } else
-            adContainerView.setVisibility(View.GONE);
-
-    }
 
     private View.OnClickListener onClickListener(final Class<?> c) {
         return new View.OnClickListener() {

@@ -1,27 +1,19 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rlNew"
-    android:background="@color/primary"
-    android:orientation="vertical">
+    android:theme="@style/Theme.MaterialComponents.DayNight"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/_16sdp"
+    app:cardElevation="@dimen/_5sdp"
+    app:cardMaxElevation="@dimen/_5sdp"
+    app:cardPreventCornerOverlap="false"
+    app:strokeColor="#fff" app:strokeWidth="@dimen/_3sdp"
+    >
 
-    <!-- Content -->
-    <GridView
-        android:id="@+id/grid_view"
+    <ImageView
+        android:id="@+id/slideImage"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:numColumns="1"
-        android:stretchMode="columnWidth"
-        android:gravity="center" />
-
-    <!-- Ad Banner -->
-    <FrameLayout
-        android:id="@+id/ad_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
-
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+</com.google.android.material.card.MaterialCardView>

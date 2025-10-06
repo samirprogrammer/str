@@ -2,6 +2,7 @@ package arena.kids.stories.adapter;
 
 import static android.content.Context.MODE_PRIVATE;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -125,20 +126,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
             String fontSize = sharedPref.getString("fontSize", "3");
-            int fSize = R.dimen.result_font22;
-            if (fontSize.contains("1"))
-                fSize = R.dimen.result_font11;
-            else if (fontSize.contains("2"))
-                fSize = R.dimen.result_font22;
-            else if (fontSize.contains("3"))
-                fSize = R.dimen.result_font33;
-            else if (fontSize.contains("4"))
-                fSize = R.dimen.result_font44;
-            else if (fontSize.contains("5"))
-                fSize = R.dimen.result_font55;
 
-            viewHolder.item.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    activity.getResources().getDimension(fSize));
+// Default font size resource
+            int resId = R.dimen._22sdp;
+
+// Pick resource based on fontSize
+            switch (fontSize) {
+                case "1": resId = R.dimen._20sdp; break;
+                case "2": resId = R.dimen._24sdp; break;
+                case "3": resId = R.dimen._26sdp; break;
+                case "4": resId = R.dimen._28sdp; break;
+                case "5": resId = R.dimen._32sdp; break;
+            }
+
+// Get actual pixel size
+            float fSizePx = activity.getResources().getDimension(resId);
+
+// Apply to TextView
+            viewHolder.item.setTextSize(TypedValue.COMPLEX_UNIT_PX, fSizePx);
 
             this.activity.registerForContextMenu(viewHolder.item);
 

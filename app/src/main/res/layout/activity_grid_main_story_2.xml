@@ -2,30 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parentLayout"
-    android:layout_width="190dp"
-    android:layout_height="140dp"
+    android:layout_width="@dimen/_190sdp"
+    android:layout_height="@dimen/_140sdp"
     android:layout_gravity="center_vertical"
     android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
         android:theme="@style/Theme.MaterialComponents.DayNight"
         app:strokeColor="#fff"
-        app:strokeWidth="2dp"
+        app:strokeWidth="@dimen/_2sdp"
         app:cardBackgroundColor="#fff"
-        android:layout_width="190dp"
-        android:layout_height="140dp"
+        android:layout_width="@dimen/_190sdp"
+        android:layout_height="@dimen/_140sdp"
         android:layout_marginTop="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="20dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp"
-        app:cardMaxElevation="5dp" >
-
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        app:cardCornerRadius="@dimen/_10sdp"
+        app:cardElevation="@dimen/_5sdp"
+        app:cardMaxElevation="@dimen/_5sdp">
 
         <ImageView
             android:id="@+id/catThumb"
-            android:padding="1dp"
+            android:padding="@dimen/_1sdp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
@@ -35,16 +34,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/catThumb"
-            android:layout_margin="15dp"
+            android:layout_margin="@dimen/_15sdp"
             android:background="@drawable/rounded_corners"
             android:fontFamily="@font/angella"
             android:gravity="bottom"
-            android:padding="5dp"
+            android:padding="@dimen/_5sdp"
             android:layout_gravity="bottom"
             android:text="Hello"
-            android:textSize="14dp"
+            android:textSize="@dimen/_14sdp"
             android:textColor="#000000" />
 
-    </com.google.android.material.card.MaterialCardView >
+    </com.google.android.material.card.MaterialCardView>
 
 </RelativeLayout>

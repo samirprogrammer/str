@@ -14,31 +14,14 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Looper;
-import android.provider.BaseColumns;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.BaseColumns;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -64,10 +47,45 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
-
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+import arena.kids.stories.R;
+import arena.kids.stories.adapter.CatMainPageAdapter;
+import arena.kids.stories.adapter.SlideAdapter;
+import arena.kids.stories.adapter.activity_main_grid_more_apps;
+import arena.kids.stories.adapter.activity_main_grid_story2;
+import arena.kids.stories.adapter.activity_main_grid_story;
+import arena.kids.stories.utils.Utils;
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
+import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryPurchasesParams;
 import com.bumptech.glide.Glide;
@@ -79,9 +97,17 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-
-import arena.kids.stories.R;
-
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.common.collect.ImmutableList;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -91,47 +117,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import android.graphics.Rect;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import arena.kids.stories.adapter.CatMainPageAdapter;
-import arena.kids.stories.adapter.activity_main_grid_more_apps;
-import arena.kids.stories.adapter.activity_main_grid_story;
-import arena.kids.stories.adapter.activity_main_grid_story2;
-import arena.kids.stories.utils.Utils;
-
-
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.common.collect.ImmutableList;
+import java.util.function.Function;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements
-        PurchasesUpdatedListener {
+public class MainActivity extends AppCompatActivity implements PurchasesUpdatedListener {
     public static String[] prgmNameList;
     private static Activity activity;
     public static String[] prgmPics;
     public static String[] prgmStoryList;
     public static String[] prgmIndex;
+    private SlideAdapter adapter;
     InterstitialAd mInterstitialAd;
     private static AdView mAdMobAdView;
     private GridView gridView;
@@ -145,12 +142,23 @@ public class MainActivity extends AppCompatActivity implements
     private long mLastPurchaseClickTime = 0;
     int adUpgrade;
     private List<String> mSkuList = new ArrayList<>();
-    private List<SkuDetails> mSkuDetailsList = new ArrayList<>();
-    private void setScreen() {
+    private ViewPager2 viewPager;
+    private TabLayout tabDots;
+    private Handler sliderHandler = new Handler(Looper.getMainLooper());
+    private Runnable sliderRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (adapter != null && adapter.getItemCount() > 0) {
+                int next = (viewPager.getCurrentItem() + 1) % adapter.getItemCount();
+                viewPager.setCurrentItem(next, true);
+            }
+        }
+    };
 
+    private void setScreen() {
         Window window = getWindow();
         WindowCompat.setDecorFitsSystemWindows(window, false);
-        // Transparent bars
+
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
         View decorView = window.getDecorView();
@@ -170,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements
 
             int systemSBHeight = getStatusBarHeight();
 
-            // ✅ Take whichever is smaller → avoids emulator exaggeration
             int topInset = Math.min(statusBars.top, systemSBHeight);
 
             v.setPadding(
@@ -183,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements
             return insets;
         });
     }
+
     private int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -191,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         return result;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,8 +209,6 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception e) {
         }
         Utils.onActivityCreateSetTheme(this);
-        //kids.stories.utils.Utils.changeToTheme(this,R.style.AppTheme2);
-        //getApplicationContext().setTheme(R.style.AppTheme2);
         setContentView(R.layout.activity_main);
         adContainerView = findViewById(R.id.ad_view_container);
         setScreen();
@@ -211,25 +218,30 @@ public class MainActivity extends AppCompatActivity implements
         items = getResources().getStringArray(R.array.titles);
         itemsid = getResources().getStringArray(R.array.id);
         storylist = getResources().getStringArray(R.array.storylist);
-        //mAdMobAdView = (AdView) findViewById(R.id.ad_view);
-        handleIntent(getIntent());
         activity = this;
 
-
         LinearLayout rl = (LinearLayout) findViewById(R.id.rlNew);
-        //rl.setBackgroundColor(Color.LTGRAY);
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);*/
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        float screenWidthDp = metrics.widthPixels / metrics.density;
+
+        float relativeSize;
+        if (screenWidthDp < 360) {        // small phones
+            relativeSize = 0.9f;
+        } else if (screenWidthDp < 600) { // normal phones
+            relativeSize = 1.0f;
+        } else if (screenWidthDp < 720) { // large phones
+            relativeSize = 1.2f;
+        } else {                          // tablets
+            relativeSize = 1.5f;
+        }
+
         SpannableString s = new SpannableString("Story Time!");
         s.setSpan(new kids.stories.utils.TypefaceSpan(this, "outfit_regular.otf"), 0, s.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.setSpan(new RelativeSizeSpan(1.0f), 0, s.length(), 0);
-        //s.setSpan(new ForegroundColorSpan(0xEEEEEEEE), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new RelativeSizeSpan(relativeSize), 0, s.length(), 0);
         getSupportActionBar().setTitle(s);
         getSupportActionBar().setElevation(0);
-        // getSupportActionBar().setHideOnContentScrollEnabled(true);
 
         prgmNameList = getResources().getStringArray(R.array.storylist);
         prgmPics = getResources().getStringArray(R.array.storylistPics);
@@ -241,29 +253,26 @@ public class MainActivity extends AppCompatActivity implements
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2, RecyclerView.HORIZONTAL, false);
         recyclerView2.setLayoutManager(mLayoutManager);
 
-        getStoriesByCat("Rhymes");
-        RecyclerView main_grid_story = (RecyclerView) findViewById(R.id.grdStory);
-        main_grid_story.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        activity_main_grid_story mAdapter3 = new activity_main_grid_story(MainActivity.this, prgmStoryList, prgmIndex, "Rhymes");
-        main_grid_story.setAdapter(mAdapter3);
+        setupStoryRecyclerView(R.id.grdStory, "Rhymes", false, 0,
+                category -> new activity_main_grid_story(this, prgmStoryList, prgmIndex, category));
 
-        getStoriesByCat("Panch");
-        RecyclerView grdStoryPanch = (RecyclerView) findViewById(R.id.grdStoryPanch);
-        grdStoryPanch.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        activity_main_grid_story mAdapter4 = new activity_main_grid_story(MainActivity.this, prgmStoryList, prgmIndex, "Rhymes");
-        grdStoryPanch.setAdapter(mAdapter4);
 
-        getStoriesByCat("Classic");
-        RecyclerView grdStoryClassic = (RecyclerView) findViewById(R.id.grdStoryClassic);
-        grdStoryClassic.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        activity_main_grid_story2 mAdapter5 = new activity_main_grid_story2(MainActivity.this, prgmStoryList, prgmIndex, "Rhymes");
-        grdStoryClassic.setAdapter(mAdapter5);
+        setupStoryRecyclerView(R.id.grdStoryPanch, "Panch", false, 0,
+                category -> new activity_main_grid_story(this, prgmStoryList, prgmIndex, category));
 
-        getStoriesByCat("Fairy");
-        RecyclerView grdStoryFairy = (RecyclerView) findViewById(R.id.grdStoryFairy);
-        grdStoryFairy.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        activity_main_grid_story mAdapter6 = new activity_main_grid_story(MainActivity.this, prgmStoryList, prgmIndex, "Rhymes");
-        grdStoryFairy.setAdapter(mAdapter6);
+        setupStoryRecyclerView(R.id.grdStoryClassic, "Classic", false, 0,
+                category -> new activity_main_grid_story2(this, prgmStoryList, prgmIndex, category));
+
+        setupStoryRecyclerView(R.id.grdStoryFairy, "Fairy", false, 0,
+                category -> new activity_main_grid_story(this, prgmStoryList, prgmIndex, category));
+
+
+        setupStoryRecyclerView(R.id.grdStoryMoral, "Moral", false, 0,
+                category -> new activity_main_grid_story(this, prgmStoryList, prgmIndex, category));
+
+        setupStoryRecyclerView(R.id.grdAnimals, "Animal", false, 0,
+                category -> new activity_main_grid_story(this, prgmStoryList, prgmIndex, "Animals"));
+
 
         prgmStoryList = getResources().getStringArray(R.array.moreapps);
         RecyclerView grdMoreApps = (RecyclerView) findViewById(R.id.grdMoreApps);
@@ -271,24 +280,12 @@ public class MainActivity extends AppCompatActivity implements
         activity_main_grid_more_apps mAdapter7 = new activity_main_grid_more_apps(MainActivity.this, prgmStoryList, prgmStoryList, "Rhymes");
         grdMoreApps.setAdapter(mAdapter7);
 
-        getStoriesByCat("Moral");
-        RecyclerView grdStoryMoral = (RecyclerView) findViewById(R.id.grdStoryMoral);
-        grdStoryMoral.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        activity_main_grid_story mAdapter8 = new activity_main_grid_story(MainActivity.this, prgmStoryList, prgmIndex, "Rhymes");
-        grdStoryMoral.setAdapter(mAdapter8);
-
-        getStoriesByCat("Animal");
-        RecyclerView grdAnimals = (RecyclerView) findViewById(R.id.grdAnimals);
-        grdAnimals.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        activity_main_grid_story mAdapter9 = new activity_main_grid_story(MainActivity.this, prgmStoryList, prgmIndex, "Animals");
-        grdAnimals.setAdapter(mAdapter9);
+        viewPager = findViewById(R.id.viewPager);
+        tabDots = findViewById(R.id.tabDots);
 
 
-        String[] sOfTheDay = getResources().getStringArray(R.array.storyoftheday);
-        Random randomGenerator = new Random();
-        int index = randomGenerator.nextInt(sOfTheDay.length);
-        System.out.println("StoryOfTheDay" + sOfTheDay[index]);
-        ImageView catThumb = findViewById(R.id.catThumb);
+
+
         ImageView imgTheme = findViewById(R.id.imgTheme);
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
 
@@ -298,32 +295,11 @@ public class MainActivity extends AppCompatActivity implements
             imgTheme.setImageResource(R.drawable.nights);
         }
 
-        String uri = "@drawable/a" + sOfTheDay[index];
-        int imageResource = getApplicationContext().getResources().getIdentifier(uri, null, getApplicationContext().getPackageName());
+
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(25));
-        Glide.with(getApplicationContext())
-                .load(imageResource).signature(new ObjectKey("56"))
-                .into(catThumb);
 
-        catThumb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i;
-                //if(pgName.contains("Picto"))
-                //    i = new Intent(context, arena.kids.stories.activities.StoryPic.class);
-                // else
-                i = new Intent(getApplicationContext(), arena.kids.stories.activities.Story.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.putExtra("pos", sOfTheDay[index]);
-                i.putExtra("maxi", sOfTheDay);
-                i.putExtra("pgname", sOfTheDay);
-                i.putExtra("posorg", sOfTheDay[index]);
-                //Log.e("positioncatstory", String.valueOf(position) +"--"+prgIndexN[position] +pgNameN);
-                startActivity(i);
-            }
-        });
 
         imgTheme.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -336,30 +312,19 @@ public class MainActivity extends AppCompatActivity implements
                 else
                     myTheme = 1;
 
-
                 SharedPreferences.Editor e = sharedPref.edit();
                 e.putInt("theme", myTheme);
-                //e.clear();
                 e.apply();
                 e.commit();
 
-                Utils.changeToTheme(MainActivity.this   , myTheme);
+                Utils.changeToTheme(MainActivity.this, myTheme);
             }
         });
 
-
         int permissionState = ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS);
-        // If the permission is not granted, request it.
         if (permissionState == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
         }
-
-        //gridView = (GridView) findViewById(R.id.grid_view);
-        // gv=(GridView) findViewById(R.id.gridView1);
-        // gridView.setAdapter(new CustomerAdapter(this, prgmNameList, prgmPics, prgmNameList, prgmNameList));
-        // ViewGroup.LayoutParams layoutParams = gridView.getLayoutParams();
-        //layoutParams.height = Utils.getScreenHeight(getApplicationContext())-624; //this is in pixels
-        //gridView.setLayoutParams(layoutParams);
 
         adUpgrade = sharedPref.getInt("adUpgrade", 0);
 
@@ -370,24 +335,16 @@ public class MainActivity extends AppCompatActivity implements
         e.putLong("adtime", c.getTimeInMillis());
         e.apply();
 
-        billingClient = BillingClient.newBuilder(getApplicationContext())
-                .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases()
-                .build();
+
         System.out.println("adUpgrade main" + adUpgrade);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout
                 .LayoutParams.WRAP_CONTENT);
         if (adUpgrade == 0) {
-
             initializeAds();
             JSONObject consentObject = new JSONObject();
-
         } else {
             layoutParams.bottomMargin = 0;
-            //adLay.setVisibility(View.GONE);
-            //mButtonNoAd.setVisibility(View.GONE);
-            //mAdMobAdView.setVisibility(View.GONE);
         }
 
         final String[] from = new String[]{"cityName", "img"};
@@ -402,11 +359,7 @@ public class MainActivity extends AppCompatActivity implements
         mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 if (view.getId() == R.id.story2) {
-                    // Get the byte array from the database.
                     ImageView iconImageView = (ImageView) view;
-                    // iconImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border_black_24dp));
-
-
                     String uri = "@drawable/a" + cursor.getString(0);
                     Log.e("PicSug", uri);
                     int imageResource = getApplicationContext().getResources().getIdentifier(uri, null, getApplicationContext().getPackageName());
@@ -414,12 +367,9 @@ public class MainActivity extends AppCompatActivity implements
                             .load(imageResource).signature(new ObjectKey("56"))
                             .into(iconImageView);
                     return true;
-                } else {  // Process the rest of the adapter with default settings.
+                } else {
                     TextView txtPc = (TextView) view;
-                    /*Typeface face = Typeface.createFromAsset(getAssets(),
-                            "font/angella.otf");*/
                     Typeface face = ResourcesCompat.getFont(getApplicationContext(), R.font.angella);
-                    // viewHolder.item.setTypeface(Typeface.sans-serif-black, Typeface.NORMAL);
                     txtPc.setTypeface(face);
                     txtPc.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                             getResources().getDimension(R.dimen.result_font_small));
@@ -427,11 +377,136 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-
+        setupCarasoul();
         mSkuList.add("no_ad_upgrade");
         setupBillingClient();
     }
+    private  void setupCarasoul()
+    {
+        String[] sOfTheDay = getResources().getStringArray(R.array.storyoftheday);
+        List<String> selectedImages = new ArrayList<>();
+        List<Integer> usedIndexes = new ArrayList<>();
+        Random random = new Random();
 
+        int totalToPick = Math.min(5, sOfTheDay.length);
+        while (selectedImages.size() < totalToPick) {
+            int index = random.nextInt(sOfTheDay.length);
+            if (!usedIndexes.contains(index)) {
+                usedIndexes.add(index);
+                selectedImages.add(sOfTheDay[index]);
+            }
+        }
+
+        int[] selectedResIds = new int[selectedImages.size()];
+        for (int i = 0; i < selectedImages.size(); i++) {
+            selectedResIds[i] = getResources().getIdentifier(
+                    selectedImages.get(i),
+                    "drawable",
+                    getPackageName()
+            );
+
+            Log.d("SlideSelection", "Picked image: " + selectedImages.get(i) + " → resId: " + selectedResIds[i]);
+        }
+        /*setupStoryRecyclerView(R.id.grdStory, "Rhymes", false, 0,
+                category -> new activity_main_grid_story(this, prgmStoryList, prgmIndex, category));
+*/
+        adapter = new SlideAdapter(this, prgmStoryList,selectedImages.toArray(new String[0]));
+        viewPager.setAdapter(adapter);
+
+        new TabLayoutMediator(tabDots, viewPager, (tab, position) -> {
+            tab.setCustomView(R.layout.tab_unselected);
+        }).attach();
+
+        tabDots.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.setCustomView(R.layout.tab_selected);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.setCustomView(R.layout.tab_unselected);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) { }
+        });
+
+        viewPager.setPageTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                page.setTranslationX(-position * page.getWidth());
+                if (position <= -1 || position >= 1) {
+                    page.setAlpha(0f);
+                } else if (position == 0) {
+                    page.setAlpha(1f);
+                } else {
+                    page.setAlpha(1 - Math.abs(position));
+                }
+            }
+        });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                sliderHandler.removeCallbacks(sliderRunnable);
+                sliderHandler.postDelayed(sliderRunnable, 5000); // 5 sec per slide
+            }
+        });
+
+        new TabLayoutMediator(tabDots, viewPager, (tab, position) -> {
+            tab.setCustomView(R.layout.tab_unselected);
+        }).attach();
+
+        tabDots.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.setCustomView(R.layout.tab_selected);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.setCustomView(R.layout.tab_unselected);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+        viewPager.setPageTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                page.setTranslationX(-position * page.getWidth());
+
+                if (position <= -1 || position >= 1) {
+                    page.setAlpha(0f);
+                } else if (position == 0) {
+                    page.setAlpha(1f);
+                } else {
+
+                    page.setAlpha(1 - Math.abs(position));
+                }
+            }
+        });
+
+
+        sliderHandler.postDelayed(sliderRunnable, 5000);
+    }
+    private void setupStoryRecyclerView(int recyclerViewId, String category, boolean isGrid, int spanCount,
+                                        Function<String, RecyclerView.Adapter> adapterProvider) {
+        // Fetch stories
+        getStoriesByCat(category);
+
+        // Create adapter using the provided function
+        RecyclerView.Adapter adapter = adapterProvider.apply(category);
+
+        // Setup RecyclerView
+        RecyclerView recyclerView = findViewById(recyclerViewId);
+        RecyclerView.LayoutManager layoutManager = isGrid
+                ? new GridLayoutManager(this, spanCount, RecyclerView.HORIZONTAL, false)
+                : new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+    }
     public void gotoCategory(View V) {
         System.out.println("OnClickCat" + V.toString());
         Intent i = new Intent(getApplicationContext(), arena.kids.stories.activities.CatActivity.class);
@@ -512,7 +587,6 @@ public class MainActivity extends AppCompatActivity implements
             lastIndex = 275; //312
         }
 
-
         int len = (lastIndex + 1) - startindex;
         String[] prgmStoryList2 = new String[0];
         String[] prgmIndex2 = new String[0];
@@ -532,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements
             prgmStoryList2 = new String[len];
             prgmIndex2 = new String[len];
             int k = startindex;
-            //Log.e("40111",String.valueOf(prgmIndex[118]));
+
             for (int i = 0; i <= len - 1; i++) {
                 prgmStoryList2[i] = prgmStoryList[k];
                 prgmIndex2[i] = prgmIndex[k];
@@ -561,8 +635,6 @@ public class MainActivity extends AppCompatActivity implements
         MobileAds.setRequestConfiguration(configuration);
 
         if (adUpgrade == 0) {
-
-            // Step 1 - Create an AdView and set the ad unit ID on it.
             adView = new AdView(this);
             adView.setAdListener(new AdListener() {
                 @Override
@@ -575,28 +647,21 @@ public class MainActivity extends AppCompatActivity implements
                     Log.d("ADMOB", "Ad loaded successfully!");
                 }
             });
-            adView.setAdUnitId(getString(R.string.admob_banner_id_main));
+            adView.setAdUnitId("ca-app-pub-4801686843982324/9736217775");
             adContainerView.addView(adView);
 
             loadBanner();
         } else
             adContainerView.setVisibility(View.GONE);
-
     }
 
     private void loadBanner() {
-
-
         AdRequest adRequest =
                 new AdRequest.Builder()
                         .build();
 
         AdSize adSize = getBannerAdSize();
-        // Step 4 - Set the adaptive ad size on the ad view.
         adView.setAdSize(adSize);
-
-
-        // Step 5 - Start loading the ad in the background.
         adView.loadAd(adRequest);
     }
 
@@ -610,185 +675,197 @@ public class MainActivity extends AppCompatActivity implements
 
         int adWidth = (int) (widthPixels / density);
 
-        // Step 3 - Get adaptive ad size and return for setting on the ad view.
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity.getApplicationContext(), adWidth);
     }
 
-    private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
-        @Override
-        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
-            // To be implemented in a later section.
-            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
-                    && purchases != null) {
-                for (Purchase purchase : purchases) {
-                    handlePurchase(purchase);
-                }
-            } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-                // Handle an error caused by a user cancelling the purchase flow.
-            } else {
-                // Handle any other error codes.
-            }
-        }
-    };
     private BillingClient billingClient;
 
     private void setupBillingClient() {
+        billingClient = BillingClient.newBuilder(this)
+                .setListener(this)
+                .enablePendingPurchases(
+                        PendingPurchasesParams.newBuilder()
+                                .enableOneTimeProducts()
+                                .build()
+                )
+                .build();
+
+        Log.d(TAG, "BillingV8: Initializing BillingClient...");
+
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onBillingSetupFinished(BillingResult billingResult) {
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                Log.d(TAG, "BillingV8: Billing setup finished with response code: " + billingResult.getResponseCode());
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     getAvailableProducts();
-                    System.out.println("Billing5 Getting Puchaselist");
-                    SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
-                    billingClient.queryPurchasesAsync(
-                            QueryPurchasesParams.newBuilder()
-                                    .setProductType(BillingClient.ProductType.INAPP)
-                                    .build(),
-                            new PurchasesResponseListener() {
-                                public void onQueryPurchasesResponse(BillingResult billingResult, List purchases) {
-                                    System.out.println("Billing5 Puchaselist" + purchases.toString());
-                                    if (purchases.size() == 0) {
-
-                                        Log.e(TAG, "billing nack prod");
-                                        SharedPreferences.Editor e = sharedPref.edit();
-                                        e.putInt("adUpgrade", 0);
-                                        e.apply();
-                                    } else {
-                                        Log.e(TAG, "billing ack prod");
-                                        SharedPreferences.Editor e = sharedPref.edit();
-                                        e.putInt("adUpgrade", 1);
-                                        e.apply();
-                                    }
-                                }
-                            }
-                    );
+                    queryExistingPurchases();
+                } else {
+                    Log.e(TAG, "BillingV8: Billing setup failed: " + billingResult.getDebugMessage());
                 }
             }
 
             @Override
             public void onBillingServiceDisconnected() {
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
+                Log.w(TAG, "BillingV8: Billing service disconnected");
             }
         });
+    }
 
+    private void getAvailableProducts() {
+        QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+                .setProductList(ImmutableList.of(
+                        QueryProductDetailsParams.Product.newBuilder()
+                                .setProductId("no_ad_upgrade")
+                                .setProductType(BillingClient.ProductType.INAPP)
+                                .build()
+                ))
+                .build();
 
+        billingClient.queryProductDetailsAsync(params, (billingResult, result) -> {
+            Log.d(TAG, "BillingV8: ProductDetails query response: " + billingResult.getResponseCode());
+            List<ProductDetails> productDetailsList = result.getProductDetailsList();
+            if (productDetailsList != null && !productDetailsList.isEmpty()) {
+                pd = productDetailsList.get(0);
+                Log.i(TAG, "BillingV8: Available product loaded: " + pd.getName() + " | ID: " + pd.getProductId());
+            } else {
+                Log.w(TAG, "BillingV8: No product details found");
+            }
+        });
+    }
+
+    private void queryExistingPurchases() {
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
+
+        billingClient.queryPurchasesAsync(
+                QueryPurchasesParams.newBuilder()
+                        .setProductType(BillingClient.ProductType.INAPP)
+                        .build(),
+                (billingResult, purchases) -> {
+                    Log.d(TAG, "BillingV8: QueryPurchases response: " + billingResult.getResponseCode());
+
+                    int adUpgradeValue = 0;
+
+                    if (!purchases.isEmpty()) {
+                        Log.i(TAG, "BillingV8: Existing purchases found: " + purchases.size());
+                        for (Purchase purchase : purchases) {
+                            Log.i(TAG, "BillingV8: Purchase: " + purchase.getProducts() + " | State: " + purchase.getPurchaseState());
+                            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                adUpgradeValue = 1; // active purchase exists
+
+                            }
+                        }
+                    } else {
+                        Log.i(TAG, "BillingV8: No active purchases found");
+                    }
+
+                    sharedPref.edit().putInt("adUpgrade", adUpgradeValue).apply();
+                    Log.d(TAG, "BillingV8: adUpgrade set to " + adUpgradeValue);
+                }
+        );
+    }
+
+    private void consumePurchaseImmediately(Purchase purchase, SharedPreferences sharedPref) {
+        ConsumeParams params = ConsumeParams.newBuilder()
+                .setPurchaseToken(purchase.getPurchaseToken())
+                .build();
+
+        billingClient.consumeAsync(params, (billingResult, purchaseToken) -> {
+            Log.d(TAG, "BillingV8: ConsumeAsync response for token " + purchaseToken + ": " + billingResult.getResponseCode());
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                Log.i(TAG, "BillingV8: Purchase consumed successfully: " + purchase.getProducts());
+                sharedPref.edit()
+                        .putInt("adUpgrade", 1)
+                        .putLong("adUpgradeTime", purchase.getPurchaseTime())
+                        .putString("adUpgradeOrderID", purchase.getOrderId())
+                        .putBoolean("purchase_consumed", true)
+                        .apply();
+                runOnUiThread(() -> Toast.makeText(this, "Purchase successful! Ads removed!", Toast.LENGTH_SHORT).show());
+            } else {
+                Log.e(TAG, "BillingV8: Failed to consume purchase: " + billingResult.getDebugMessage());
+            }
+        });
     }
 
     @Override
-    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> purchases) {
+        Log.d(TAG, "BillingV8: onPurchasesUpdated response: " + billingResult.getResponseCode());
         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
-            System.out.println("billing purchases " + purchases);
             for (Purchase purchase : purchases) {
+                Log.i(TAG, "BillingV8: New purchase received: " + purchase.getProducts());
                 handlePurchase(purchase);
             }
+        } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+            Log.w(TAG, "BillingV8: User canceled purchase");
         } else {
-            // displayError(R.string.inapp_purchase_problem, billingResult.getResponseCode());
-            System.out.println("billing error " + billingResult.getResponseCode());
+            Log.e(TAG, "BillingV8: Purchase error: " + billingResult.getDebugMessage());
         }
     }
 
     private void handlePurchase(Purchase purchase) {
-        System.out.println("billing purchase state " + purchase.getPurchaseState());
+        String productId = purchase.getProducts().get(0);
+        boolean isOneTime = productId.equals("no_ad_upgrade") || productId.equals("lifetime");
 
-        System.out.println("billing Ack response purchase.getPurchaseState()" + purchase.getPurchaseState());
-        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-            System.out.println("billing Ack response isAcknowledged()" + purchase.isAcknowledged());
+        if (isOneTime) {
+            Log.d(TAG, "BillingV8: Handling one-time purchase: " + productId);
+
+        } else {
+            Log.d(TAG, "BillingV8: Handling subscription purchase: " + productId);
             if (!purchase.isAcknowledged()) {
-                AcknowledgePurchaseParams acknowledgePurchaseParams =
-                        AcknowledgePurchaseParams.newBuilder()
-                                .setPurchaseToken(purchase.getPurchaseToken())
-                                .build();
-                //billingClient.acknowledgePurchase(acknowledgePurchaseParams, onAcknowledgePurchaseResponse);
-                //AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
-                billingClient.acknowledgePurchase(
-                        acknowledgePurchaseParams,
-                        new AcknowledgePurchaseResponseListener() {
-                            @Override
-                            public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                                System.out.println("billing Ack response billingResult.getResponseCode()" + billingResult.getResponseCode());
-                                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-
-                                    System.out.println("billing Ack response billingResult.getResponseCode()inside" + billingResult.getResponseCode());
-                                    SharedPreferences sharedPref2 = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
-                                    SharedPreferences.Editor e = sharedPref2.edit();
-                                    e.putInt("adUpgrade", 1);
-                                    e.putLong("adUpgradeTime", purchase.getPurchaseTime());
-                                    e.putString("adUpgradeOrderID", purchase.getOrderId());
-                                    e.apply();
-                                    //Toast.makeText(MainActivity.this, "Consumed111111!", Toast.LENGTH_LONG).show();
-
-                                    finish();
-                                    startActivity(getIntent());
-                                    Utils.showToast(MainActivity.this, "Hurray! No more ads! Please restart the app in case ads still appears!");
-                                    //Toast.makeText(MainActivity.this, "Consumed!", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }
-                );
+                acknowledgePurchase(purchase);
+            } else {
+                Log.i(TAG, "BillingV8: Subscription already acknowledged: " + productId);
+                updateAdUpgradeStatus(purchase);
             }
         }
     }
 
+    private void acknowledgePurchase(Purchase purchase) {
+        AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
+                .setPurchaseToken(purchase.getPurchaseToken())
+                .build();
 
-    public void purchase(String sku) {
-        // Mis-clicking prevention, using threshold of 3 seconds
-        try {
-            ImmutableList productDetailsParamsList =
-                    ImmutableList.of(
-                            BillingFlowParams.ProductDetailsParams.newBuilder()
-                                    // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
-                                    .setProductDetails(pd)
-                                    // to get an offer token, call ProductDetails.getSubscriptionOfferDetails()
-                                    // for a list of offers that are available to the user
-                                    //.setOfferToken(selectedOfferToken)
-                                    .build()
-                    );
+        billingClient.acknowledgePurchase(params, billingResult -> {
+            Log.d(TAG, "BillingV8: Acknowledge response: " + billingResult.getResponseCode());
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                Log.i(TAG, "BillingV8: Purchase acknowledged successfully: " + purchase.getProducts());
+                updateAdUpgradeStatus(purchase);
+                runOnUiThread(() -> Toast.makeText(this, "Hurray! No more ads!", Toast.LENGTH_SHORT).show());
+                finish();
+                startActivity(getIntent());
+            } else {
+                Log.e(TAG, "BillingV8: Failed to acknowledge purchase: " + billingResult.getDebugMessage());
+            }
+        });
+    }
 
-            BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                    .setProductDetailsParamsList(productDetailsParamsList)
-                    .build();
-            BillingResult billingResult = billingClient.launchBillingFlow(activity, billingFlowParams);
-        } catch (Exception e) {
-            Toast msg = Toast.makeText(MainActivity.this, "Oops! Something went wrong with Billing! Please try after some time", Toast.LENGTH_LONG);
-            FirebaseCrashlytics.getInstance().recordException(e);
+    private void updateAdUpgradeStatus(Purchase purchase) {
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
+        sharedPref.edit()
+                .putInt("adUpgrade", 1)
+                .putLong("adUpgradeTime", purchase.getPurchaseTime())
+                .putString("adUpgradeOrderID", purchase.getOrderId())
+                .apply();
+        Log.i(TAG, "BillingV8: Ad upgrade status updated in SharedPreferences for: " + purchase.getProducts());
+    }
+
+    public void purchase() {
+        if (pd == null) {
+            Toast.makeText(this, "Product not loaded yet!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
+        BillingFlowParams params = BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(
+                        ImmutableList.of(BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(pd)
+                                .build())
+                )
+                .build();
+
+        billingClient.launchBillingFlow(this, params);
     }
 
     public ProductDetails pd;
-
-    private void getAvailableProducts() {
-        Log.e(TAG, "billing5 -getAvailableProducts");
-        QueryProductDetailsParams queryProductDetailsParams =
-                QueryProductDetailsParams.newBuilder()
-                        .setProductList(
-                                ImmutableList.of(
-                                        QueryProductDetailsParams.Product.newBuilder()
-                                                .setProductId("no_ad_upgrade")
-                                                .setProductType(BillingClient.ProductType.INAPP)
-                                                .build()))
-                        .build();
-
-        billingClient.queryProductDetailsAsync(
-                queryProductDetailsParams,
-                new ProductDetailsResponseListener() {
-                    public void onProductDetailsResponse(BillingResult billingResult,
-                                                         List<ProductDetails> productDetailsList) {
-                        try {
-                            Log.e(TAG, "billing5 -getAvailableProducts" + productDetailsList.get(0));
-                            pd = productDetailsList.get(0);
-                            // check billingResult
-                            // process returned productDetailsList
-                        } catch (Exception e) {
-                            FirebaseCrashlytics.getInstance().recordException(e);
-                        }
-                    }
-                }
-        );
-
-    }
-
 
     @Override
     protected void onResume() {
@@ -799,6 +876,7 @@ public class MainActivity extends AppCompatActivity implements
             searchView.clearFocus();
             searchView.onActionViewCollapsed();
         }
+        sliderHandler.postDelayed(sliderRunnable, 5000);
         super.onResume();
     }
 
@@ -811,10 +889,6 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("width-Screen", String.valueOf(dpWidth));
 
         int newHeight = 32;
-           /*
-        if (dpHeight > 720)
-            newHeight = 90;
-        else if (dpHeight <= 720 && dpHeight > 400)*/
         newHeight = 50;
 
         newHeight = 60;
@@ -839,20 +913,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        //menu.add(1, 1, 1, "Share").setIcon(R.drawable.ic_share_white_24dp_2).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
         menu.add(2, 2, 2, "Favourites").setIcon(R.drawable.star).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //menu.add(3, 3, 3, "Famous Nursery Rhymes - Audio").setIcon(R.drawable.ic_stars_white_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        //menu.add(4, 4, 4, "Our More Apps!").setIcon(R.drawable.ic_stars_white_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        //menu.add(2, 2, 2, "Favourites").setActionView("android.widget.SearchView").setIcon(R.drawable.ic_stars_white_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW|MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-        //MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.menu_main, menu);
         MenuInflater inflater = getMenuInflater();
-        // Inflate menu to add items to action bar if it is present.
         inflater.inflate(R.menu.menu_main, menu);
-        // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView =
@@ -864,16 +928,11 @@ public class MainActivity extends AppCompatActivity implements
         searchView.setFocusable(false);
         searchView.setIconifiedByDefault(false);
 
-
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionClick(int position) {
-                // Your code here
                 String[] prgmIndex = getResources().getStringArray(R.array.id);
                 Log.d(TAG, "onSuggestionClick: " + c.getString(0));
-                // Toast msg = Toast.makeText(MainActivity.this, "gusgg"+position +"text"+searchView.getQuery().toString(), Toast.LENGTH_LONG);
-                //msg.show();
-
 
                 Intent i = new Intent(getApplicationContext(), arena.kids.stories.activities.Story.class);
                 i.putExtra("pos", c.getString(0));
@@ -889,7 +948,6 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public boolean onSuggestionSelect(int position) {
-                // Your code here
                 return true;
             }
         });
@@ -909,11 +967,10 @@ public class MainActivity extends AppCompatActivity implements
             public void onFocusChange(View v, boolean hasFocus) {
                 Log.d(TAG, "onFocusChange2: " + hasFocus);
                 if (hasFocus) {
-                    //got focus
+
 
                 } else {
 
-                    //lost focus
                 }
             }
         });
@@ -969,29 +1026,19 @@ public class MainActivity extends AppCompatActivity implements
         if (j == 0 && query.length() > 2) {
             if (Arrays.asList(storylist).toString().toLowerCase().contains(query.toLowerCase())) {
                 System.out.println("Storylist matching" + query.toLowerCase());
-                // true
+
             } else {
                 System.out.println("Storylist notmatching" + query.toLowerCase());
             }
         }
 
-
         mAdapter.changeCursor(c);
-
     }
-
-    /*@Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }*/
 
     private void handleIntent(Intent intent) {
         String query = intent.getStringExtra(SearchManager.QUERY);
-        //Toast msg = Toast.makeText(MainActivity.this, query, Toast.LENGTH_LONG);
-        //msg.show();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 
-            //use the query to search
         }
     }
 
@@ -1007,8 +1054,6 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (item.getItemId()) {
             case 1:
-
-
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, "English Stories - " + Uri.parse("http://play.google.com/store/apps/details?id="
@@ -1018,40 +1063,10 @@ public class MainActivity extends AppCompatActivity implements
 
                 return true;
             case 2:
-                // write your code here
                 Intent i = new Intent(getApplicationContext(), arena.kids.stories.activities.CatActivity.class);
                 i.putExtra("pgname", "Favourites");
                 startActivity(i);
-                //Toast msg = Toast.makeText(MainActivity.this, "Menu 1", Toast.LENGTH_LONG);
-                //msg.show();
                 return true;
-            /*case R.id.action_stories:
-                // write your code here
-                final String appPackageName4 = "arena.audio.english.stories"; // getPackageName() from Context or Activity object
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName4)));
-                } catch (android.content.ActivityNotFoundException anfe) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName4)));
-                }
-                return true;
-            case R.id.action_video:
-                // write your code here
-                final String appPackageName45 = "arena.kids.video"; // getPackageName() from Context or Activity object
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName45)));
-                } catch (android.content.ActivityNotFoundException anfe) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName45)));
-                }
-                return true;
-            case R.id.menu_famous:
-                // write your code here
-                final String appPackageName = "arena.kids.rhymes"; // getPackageName() from Context or Activity object
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                } catch (android.content.ActivityNotFoundException anfe) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                }
-                return true;*/
             case R.id.menu_theme:
                 SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
 
@@ -1061,18 +1076,15 @@ public class MainActivity extends AppCompatActivity implements
                 else
                     myTheme = 1;
 
-
                 SharedPreferences.Editor e = sharedPref.edit();
                 e.putInt("theme", myTheme);
-                //e.clear();
                 e.apply();
                 e.commit();
 
                 Utils.changeToTheme(this, myTheme);
                 return true;
             case R.id.action_rate:
-                // write your code here
-                final String appPackageName2 = getPackageName();// from Context or Activity object
+                final String appPackageName2 = getPackageName();
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName2)));
                 } catch (android.content.ActivityNotFoundException anfe) {
@@ -1080,27 +1092,21 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 return true;
             case R.id.action_feedback:
-                // write your code here
                 final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 
-                /* Fill it with Data */
                 emailIntent.setType("plain/text");
                 emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"wearenadevelopers@gmail.com"});
                 emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "User Feedback - English Stories");
                 emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Submit your Issue/Feedback : ");
-                //emailIntent.setType("message/rfc82");
-                /* Send it off to the Activity-Chooser */
                 startActivity(Intent.createChooser(emailIntent, "Submit Issue/Feedback..."));
 
                 return true;
             case R.id.action_no_ads:
-                // write your code here
                 System.out.println("billing click ");
-                purchase("no_ad_upgrade");
+                purchase();
                 return true;
             case R.id.menu_famous_apps:
-                // write your code here
-                final String appPackageName3 = "Arena Developer"; // getPackageName() from Context or Activity object
+                final String appPackageName3 = "Arena Developer";
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:" + appPackageName3)));
                 } catch (android.content.ActivityNotFoundException anfe) {
@@ -1110,14 +1116,10 @@ public class MainActivity extends AppCompatActivity implements
             case android.R.id.home:
                 sharedPref = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
 
-
-                //Set<String> set = mSharedPreferences.sharedPref("fav", null);
-
                 SimpleDateFormat df2 = new SimpleDateFormat("MM/dd/yyyy");
                 String formattedDate2 = df2.format(c.getTime());
                 String rte = sharedPref.getString("rate", formattedDate2);
                 boolean dateflag = false;
-                //if (!rte.contains("First") && !rte.contains("No")) {
                 String dtStart = rte;
                 SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
                 try {
@@ -1133,13 +1135,10 @@ public class MainActivity extends AppCompatActivity implements
                     FirebaseCrashlytics.getInstance().recordException(ee);
                     ee.printStackTrace();
                 }
-                // }
-
 
                 Log.e("rate get - ", String.valueOf(rte));
                 int rtetotal = sharedPref.getInt("adtimeTotal3", 0);
                 Log.e("PageView Total - ", String.valueOf(rtetotal));
-
 
                 if (rtetotal >= 4 && !rte.contains("No") && dateflag) {
                     AlertDialog.Builder builder;
@@ -1160,7 +1159,6 @@ public class MainActivity extends AppCompatActivity implements
                     ss.setSpan(new ForegroundColorSpan(Color.rgb(21, 101, 192)), 0, ss.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     s.setSpan(new ForegroundColorSpan(Color.rgb(0, 157, 214)), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-
                     SpannableString sss = new SpannableString("RATE NOW");
                     sss.setSpan(new kids.stories.utils.TypefaceSpan(this, "angella.otf"), 0, sss.length(),
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1178,7 +1176,6 @@ public class MainActivity extends AppCompatActivity implements
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     s2.setSpan(new RelativeSizeSpan(0.8f), 0, s2.length(), 0);
                     s2.setSpan(new ForegroundColorSpan(Color.rgb(21, 101, 192)), 0, s2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 
                     Rect displayRectangle = new Rect();
                     Window window = this.getWindow();
@@ -1212,7 +1209,6 @@ public class MainActivity extends AppCompatActivity implements
                                     Log.e("rate date - ", String.valueOf(formattedDate));
                                     SharedPreferences.Editor e = sharedPref.edit();
                                     e.putString("rate", formattedDate);
-                                    //e.clear();
                                     e.apply();
                                     e.commit();
                                     finish();
@@ -1232,7 +1228,6 @@ public class MainActivity extends AppCompatActivity implements
                                     Log.e("rate date - ", String.valueOf(formattedDate));
                                     SharedPreferences.Editor e = sharedPref.edit();
                                     e.putString("rate", formattedDate);
-                                    //e.clear();
                                     e.apply();
                                     e.commit();
                                     finish();
@@ -1250,7 +1245,6 @@ public class MainActivity extends AppCompatActivity implements
                                     Log.e("rate date - ", String.valueOf(formattedDate));
                                     SharedPreferences.Editor e = sharedPref.edit();
                                     e.putString("rate", formattedDate);
-                                    //e.clear();
                                     e.apply();
                                     e.commit();
                                     finish();
@@ -1276,15 +1270,12 @@ public class MainActivity extends AppCompatActivity implements
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         String formattedDate = df.format(c.getTime());
 
-
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
-        //Set<String> set = mSharedPreferences.sharedPref("fav", null);
 
         SimpleDateFormat df2 = new SimpleDateFormat("MM/dd/yyyy");
         String formattedDate2 = df2.format(c.getTime());
         String rte = sharedPref.getString("rate", formattedDate2);
         boolean dateflag = false;
-        //if (!rte.contains("First") && !rte.contains("No")) {
         String dtStart = rte;
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         try {
@@ -1300,13 +1291,10 @@ public class MainActivity extends AppCompatActivity implements
             FirebaseCrashlytics.getInstance().recordException(e);
             e.printStackTrace();
         }
-        // }
-
 
         Log.e("rate get - ", String.valueOf(rte));
         int rtetotal = sharedPref.getInt("adtimeTotal3", 0);
         Log.e("PageView Total - ", String.valueOf(rtetotal));
-
 
         if (rtetotal >= 4 && !rte.contains("No") && dateflag) {
             AlertDialog.Builder builder;
@@ -1339,13 +1327,11 @@ public class MainActivity extends AppCompatActivity implements
             s1.setSpan(new RelativeSizeSpan(0.8f), 0, s1.length(), 0);
             s1.setSpan(new ForegroundColorSpan(Color.rgb(21, 101, 192)), 0, s1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-
             SpannableString s2 = new SpannableString("NO THANKS");
             s2.setSpan(new kids.stories.utils.TypefaceSpan(this, "angella.otf"), 0, s2.length(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             s2.setSpan(new RelativeSizeSpan(0.8f), 0, s2.length(), 0);
             s2.setSpan(new ForegroundColorSpan(Color.rgb(21, 101, 192)), 0, s2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 
             Rect displayRectangle = new Rect();
             Window window = this.getWindow();
@@ -1379,7 +1365,6 @@ public class MainActivity extends AppCompatActivity implements
                             Log.e("rate date - ", String.valueOf(formattedDate));
                             SharedPreferences.Editor e = sharedPref.edit();
                             e.putString("rate", formattedDate);
-                            //e.clear();
                             e.apply();
                             e.commit();
                             finish();
@@ -1390,7 +1375,6 @@ public class MainActivity extends AppCompatActivity implements
 
                             SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Shared", MODE_PRIVATE);
 
-
                             Calendar c = Calendar.getInstance();
                             System.out.println("Current time => " + c.getTime());
                             c.add(Calendar.DAY_OF_YEAR, 15);
@@ -1400,7 +1384,6 @@ public class MainActivity extends AppCompatActivity implements
                             Log.e("rate date - ", String.valueOf(formattedDate));
                             SharedPreferences.Editor e = sharedPref.edit();
                             e.putString("rate", formattedDate);
-                            //e.clear();
                             e.apply();
                             e.commit();
                             finish();
@@ -1419,7 +1402,6 @@ public class MainActivity extends AppCompatActivity implements
                             Log.e("rate date - ", String.valueOf(formattedDate));
                             SharedPreferences.Editor e = sharedPref.edit();
                             e.putString("rate", formattedDate);
-                            //e.clear();
                             e.apply();
                             e.commit();
                             finish();
@@ -1430,15 +1412,14 @@ public class MainActivity extends AppCompatActivity implements
                             0.9f), (int) (displayRectangle.height() * 0.53f));
         } else
             super.onBackPressed();
-
     }
 
     @Override
     public void onDestroy() {
-
+        if (billingClient != null) {
+            billingClient.endConnection();
+        }
         super.onDestroy();
-
-
     }
 
     private View.OnClickListener onClickListener(final Class<?> c) {
@@ -1480,49 +1461,7 @@ public class MainActivity extends AppCompatActivity implements
                     mainIntent.putExtra("not", "yes");
                     MainActivity.this.startActivity(mainIntent);
                 }
-                /*if (getIntent().getExtras().getString("play") != null) {
-                    Log.d("StoryPlay", "KeyPlay: " + key + " Value: " + getIntent().getExtras().getString("play"));
-                    // mainIntent = new Intent(SplashActivity.this, arena.kids.stories.activities.CatActivity.class);
-                    //mainIntent.putExtra("pgname", getIntent().getExtras().getString("cat"));
-
-
-                    Intent intent;
-
-                    final String appPackageName = getIntent().getExtras().getString("play"); // getPackageName()
-                    try {
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName));
-                    }
-                    int notificaionId = 1;
-                    PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                    NotificationCompat.BigTextStyle bigTextNotiStyle = null;
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    int color = ContextCompat.getColor(getApplicationContext(), R.color.accentLight);
-                    NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
-                            //.setSmallIcon(R.drawable.ic_launcher)
-                            .setContentTitle("" + getIntent().getExtras().getString("desc"))
-                            .setContentText("" + getIntent().getExtras().getString("desc"))
-                            .setStyle(bigTextNotiStyle)
-                            .setAutoCancel(true)
-                            .setColor(color)
-                            .setContentIntent(pIntent)
-                            .setLights(Color.RED, 3000, 3000);
-                    notificationManager.notify(notificaionId, mBuilder.build());
-
-                    Uri uri = Uri.parse("market://details?id=" + getIntent().getExtras().getString("play"));
-                    Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                    try {
-                        startActivity(goToMarket);
-                    } catch (ActivityNotFoundException e) {
-                        startActivity(new Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("http://play.google.com/store/apps/details?id="
-                                        + getIntent().getExtras().getString("play"))));
-                    }
-                }*/
             }
         }
-
     }
 }

@@ -6,164 +6,167 @@
     android:background="?attr/colorPrimaryTheme"
     android:orientation="vertical">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <!-- Scrollable content -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="?attr/colorPrimaryTheme" >
+        android:background="?attr/colorPrimaryTheme"
+        android:fillViewport="true">
 
-        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        <LinearLayout
             android:id="@+id/r8lNew"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/colorPrimaryTheme"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/colorPrimaryTheme">
 
-
+            <!-- Today's Story Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/_1sdp"
                 android:orientation="horizontal"
-                android:paddingLeft="10dp">
+                android:paddingLeft="@dimen/_10sdp">
 
                 <TextView
                     android:id="@+id/txtPanchf"
-                    android:layout_width="250dp"
+                    android:layout_width="@dimen/_270sdp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="90dp"
+                    android:layout_marginEnd="@dimen/_60sdp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_corners_main"
                     android:fontFamily="@font/angella"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="Today's Story"
+                    android:paddingLeft="@dimen/_20sdp"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:paddingBottom="@dimen/_5sdp"
+                    android:text="Stories of the Day"
                     android:textColor="@color/textcolor"
-                    android:textSize="17dp" />
+                    android:textSize="@dimen/_16sdp" />
 
                 <ImageView
                     android:id="@+id/imgTheme"
-                    android:layout_width="60dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="right"
                     android:onClick="gotoCategory"
-                    android:padding="3dp"
+
+                    android:padding="@dimen/_3sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
                     android:src="@drawable/lights" />
             </LinearLayout>
 
-            <LinearLayout
+            <!-- Today's Story Card -->
+            <FrameLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:paddingTop="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_20sdp"
+                android:paddingBottom="@dimen/_10sdp"
+                android:paddingStart="@dimen/_20sdp"
+                android:layout_height="@dimen/_180sdp">
 
-                <com.google.android.material.card.MaterialCardView
+                <!-- Slider -->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="20dp"
-                    android:padding="40dp"
-                    android:theme="@style/Theme.MaterialComponents.DayNight"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="5dp"
-                    app:cardMaxElevation="5dp"
-                    app:cardPreventCornerOverlap="false"
-                    app:strokeColor="#fff"
-                    app:strokeWidth="3dp">
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:clipChildren="false"
+                    android:overScrollMode="never"/>
 
-                    <ImageView
-                        android:id="@+id/catThumb"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:background="@drawable/rounded_corners_main"
-                        android:padding="3dp"
-                        android:scaleType="fitXY" />
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
+                <!-- Dots / Rectangle indicators on top of image -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabDots"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="@dimen/_1sdp"
+                app:tabIndicatorColor="@android:color/transparent"
+                app:tabIndicatorHeight="0dp"
+                app:tabSelectedTextColor="@android:color/black"
+                app:tabIndicatorFullWidth="false"
+                app:tabGravity="center"
+                app:tabMode="fixed"/>
+            </FrameLayout>
 
+
+            <!-- Popular Categories -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:orientation="vertical"
-                android:paddingLeft="10dp">
+                android:paddingLeft="@dimen/_10sdp">
 
                 <TextView
                     android:id="@+id/txtCatTitlse"
-                    android:layout_width="250dp"
+                    android:layout_width="@dimen/_190sdp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_corners_main"
                     android:fontFamily="@font/angella"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="5dp"
-                    android:text="Popular Categories"
+                    android:paddingLeft="@dimen/_20sdp"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:paddingRight="@dimen/_20sdp"
+                    android:paddingBottom="@dimen/_5sdp"
+                    android:text="Top Categories"
                     android:textColor="@color/textcolor"
-                    android:textSize="17dp"
-
-                    />
+                    android:textSize="@dimen/_16sdp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/grdCat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical" />
-
             </LinearLayout>
 
+            <!-- Sections: Panchatantra, Fairy, Classic, Moral, More Apps, Rhymes, Animals -->
+            <!-- All margins/paddings/dp replaced with @dimen/_Xsdp -->
+
+            <!-- Panchatantra Stories -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="5dp"
+                    android:layout_height="@dimen/_50sdp"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp">
+                    android:paddingLeft="@dimen/_10sdp">
 
                     <TextView
                         android:id="@+id/txtPanch"
-                        android:layout_width="250dp"
+                        android:layout_width="@dimen/_250sdp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="90dp"
+                        android:layout_marginEnd="@dimen/_90sdp"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_corners_main"
                         android:fontFamily="@font/angella"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
-                        android:text="Panchatantra Stories"
+                        android:paddingLeft="@dimen/_20sdp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:paddingBottom="@dimen/_5sdp"
+                        android:text="Panchatantra"
                         android:textColor="@color/textcolor"
-                        android:textSize="17dp" />
+                        android:textSize="@dimen/_16sdp" />
 
                     <ImageView
                         android:id="@+id/imgPanchDetagil"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:padding="@dimen/_3sdp"
                         android:onClick="gotoCategory"
-                        android:padding="3dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/prev" />
                 </LinearLayout>
@@ -172,54 +175,48 @@
                     android:id="@+id/grdStoryPanch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="@dimen/_10sdp"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical" />
-
             </LinearLayout>
 
+            <!-- Fairy Stories -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="5dp"
+                    android:layout_height="@dimen/_50sdp"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp">
+                    android:paddingLeft="@dimen/_10sdp">
 
                     <TextView
                         android:id="@+id/txtFairy"
-                        android:layout_width="250dp"
+                        android:layout_width="@dimen/_250sdp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="90dp"
+                        android:layout_marginEnd="@dimen/_90sdp"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_corners_main"
                         android:fontFamily="@font/angella"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="20dp"
-                        android:paddingBottom="5dp"
+                        android:paddingLeft="@dimen/_20sdp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:paddingRight="@dimen/_20sdp"
+                        android:paddingBottom="@dimen/_5sdp"
                         android:text="Fairytales"
                         android:textColor="@color/textcolor"
-                        android:textSize="17dp"
-
-                        />
+                        android:textSize="@dimen/_16sdp" />
 
                     <ImageView
                         android:id="@+id/imgFairy"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right"
-                        android:layout_weight="0"
                         android:onClick="gotoCategory"
-                        android:padding="3dp"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:padding="@dimen/_3sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/prev" />
                 </LinearLayout>
@@ -230,49 +227,46 @@
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingLeft="20dp" />
-
+                    android:paddingLeft="@dimen/_20sdp" />
             </LinearLayout>
 
+            <!-- Classic Stories -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="5dp"
+                    android:layout_height="@dimen/_50sdp"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp">
+                    android:paddingLeft="@dimen/_10sdp">
 
                     <TextView
                         android:id="@+id/txtClassic"
-                        android:layout_width="250dp"
+                        android:layout_width="@dimen/_250sdp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="90dp"
+                        android:layout_marginEnd="@dimen/_90sdp"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_corners_main"
                         android:fontFamily="@font/angella"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="20dp"
-                        android:paddingBottom="5dp"
+                        android:paddingLeft="@dimen/_20sdp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:paddingRight="@dimen/_20sdp"
+                        android:paddingBottom="@dimen/_5sdp"
                         android:text="Classic Stories"
                         android:textColor="@color/textcolor"
-                        android:textSize="17dp" />
+                        android:textSize="@dimen/_16sdp" />
 
                     <ImageView
                         android:id="@+id/imgClassic"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right"
                         android:onClick="gotoCategory"
-                        android:padding="3dp"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:padding="@dimen/_3sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/prev" />
                 </LinearLayout>
@@ -283,52 +277,46 @@
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingLeft="10dp" />
-
+                    android:paddingLeft="@dimen/_10sdp" />
             </LinearLayout>
 
-
-
-
+            <!-- Moral Stories -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="5dp"
+                    android:layout_height="@dimen/_50sdp"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp">
+                    android:paddingLeft="@dimen/_10sdp">
 
                     <TextView
                         android:id="@+id/txtMoral"
-                        android:layout_width="250dp"
+                        android:layout_width="@dimen/_250sdp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="90dp"
+                        android:layout_marginEnd="@dimen/_90sdp"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_corners_main"
                         android:fontFamily="@font/angella"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="20dp"
-                        android:paddingBottom="5dp"
+                        android:paddingLeft="@dimen/_20sdp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:paddingRight="@dimen/_20sdp"
+                        android:paddingBottom="@dimen/_5sdp"
                         android:text="Moral Stories"
                         android:textColor="@color/textcolor"
-                        android:textSize="17dp" />
+                        android:textSize="@dimen/_16sdp" />
 
                     <ImageView
                         android:id="@+id/imgMoral"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right"
                         android:onClick="gotoCategory"
-                        android:padding="3dp"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:padding="@dimen/_3sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/prev" />
                 </LinearLayout>
@@ -339,34 +327,34 @@
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingLeft="10dp" />
-
+                    android:paddingLeft="@dimen/_10sdp" />
             </LinearLayout>
+
+            <!-- More Apps -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:orientation="vertical"
-                android:paddingLeft="10dp">
+                android:paddingLeft="@dimen/_10sdp">
 
                 <TextView
                     android:id="@+id/txtMore"
-                    android:layout_width="250dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="90dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="@dimen/_20sdp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_corners_main"
                     android:fontFamily="@font/angella"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="5dp"
+                    android:paddingLeft="@dimen/_20sdp"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:paddingRight="@dimen/_20sdp"
+                    android:paddingBottom="@dimen/_5sdp"
                     android:text="More Apps"
                     android:textColor="@color/textcolor"
-                    android:textSize="17dp" />
+                    android:textSize="@dimen/_16sdp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/grdMoreApps"
@@ -374,48 +362,46 @@
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingLeft="10dp" />
-
+                    android:paddingLeft="@dimen/_10sdp" />
             </LinearLayout>
+
+            <!-- Rhymes -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="5dp"
+                    android:layout_height="@dimen/_50sdp"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp">
+                    android:paddingLeft="@dimen/_10sdp">
 
                     <TextView
                         android:id="@+id/txtRhymes"
-                        android:layout_width="250dp"
+                        android:layout_width="@dimen/_250sdp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="90dp"
+                        android:layout_marginEnd="@dimen/_90sdp"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_corners_main"
                         android:fontFamily="@font/angella"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="20dp"
-                        android:paddingBottom="5dp"
+                        android:paddingLeft="@dimen/_20sdp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:paddingRight="@dimen/_20sdp"
+                        android:paddingBottom="@dimen/_5sdp"
                         android:text="Rhymes"
                         android:textColor="@color/textcolor"
-                        android:textSize="17dp" />
+                        android:textSize="@dimen/_16sdp" />
 
                     <ImageView
                         android:id="@+id/imgRhymes"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right"
                         android:onClick="gotoCategory"
-                        android:padding="3dp"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:padding="@dimen/_3sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/prev" />
                 </LinearLayout>
@@ -424,51 +410,48 @@
                     android:id="@+id/grdStory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingLeft="20dp" />
-
+                    android:paddingLeft="@dimen/_20sdp" />
             </LinearLayout>
+
+            <!-- Animal Stories -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="5dp"
+                    android:layout_height="@dimen/_50sdp"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp">
+                    android:paddingLeft="@dimen/_10sdp">
 
                     <TextView
                         android:id="@+id/txtAnimals"
-                        android:layout_width="250dp"
+                        android:layout_width="@dimen/_250sdp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="90dp"
+                        android:layout_marginEnd="@dimen/_90sdp"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_corners_main"
                         android:fontFamily="@font/angella"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="20dp"
-                        android:paddingBottom="5dp"
+                        android:paddingLeft="@dimen/_20sdp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:paddingRight="@dimen/_20sdp"
+                        android:paddingBottom="@dimen/_5sdp"
                         android:text="Animal Stories"
                         android:textColor="@color/textcolor"
-                        android:textSize="17dp" />
+                        android:textSize="@dimen/_16sdp" />
 
                     <ImageView
                         android:id="@+id/imgAnimal"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right"
                         android:onClick="gotoCategory"
-                        android:padding="3dp"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:padding="@dimen/_3sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/prev" />
                 </LinearLayout>
@@ -477,19 +460,19 @@
                     android:id="@+id/grdAnimals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingLeft="20dp" />
-
+                    android:paddingLeft="@dimen/_20sdp" />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
+    <!-- Fixed Ad Banner at Bottom -->
     <FrameLayout
         android:id="@+id/ad_view_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_gravity="bottom"
-        android:layout_centerInParent="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
 </LinearLayout>

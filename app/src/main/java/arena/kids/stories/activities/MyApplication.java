@@ -88,7 +88,7 @@ public class MyApplication extends Application implements Application.ActivityLi
             AdRequest request = new AdRequest.Builder().build();
 
             RequestConfiguration configuration =
-                    new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("69CD3CA96CCBE434EA3CB3F94DB40C54")).build();
+                    new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("EBB40DF168323087C9461BE093AC4ED0")).build();
 
             MobileAds.setRequestConfiguration(configuration);
 

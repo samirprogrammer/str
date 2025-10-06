@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -59,6 +61,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -184,9 +187,9 @@ public class Story extends AppCompatActivity implements TextToSpeech.OnInitListe
             //return WindowInsetsCompat.CONSUMED;
             return insets;
         });
-        AD_UNIT_ID = getString(R.string.admob_banner_full);
+        AD_UNIT_ID = "ca-app-pub-4801686843982324/8423136100";
         RequestConfiguration configuration =
-                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("1902CEF7CBF449977CF2690AA1490571")).build();
+                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("EBB40DF168323087C9461BE093AC4ED0")).build();
 
         adUpgrade = sharedPref.getInt("adUpgrade", 0);
         new Thread(
@@ -201,7 +204,7 @@ public class Story extends AppCompatActivity implements TextToSpeech.OnInitListe
                                     adContainerView = findViewById(R.id.ad_view_container);
                                     // Step 1 - Create an AdView and set the ad unit ID on it.
                                     adView = new AdView(this);
-                                    adView.setAdUnitId(getString(R.string.admob_banner_id_main));
+                                    adView.setAdUnitId("ca-app-pub-4801686843982324/9736217775");
                                     adContainerView.addView(adView);
                                     loadBanner();
                                     loadAd();
@@ -296,7 +299,36 @@ public class Story extends AppCompatActivity implements TextToSpeech.OnInitListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+// Load your back icon
+        Drawable upArrow = AppCompatResources.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        if (upArrow != null) {
+            upArrow = upArrow.mutate();
+
+            // Wrap inside a LayerDrawable so we can move it
+            LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{upArrow});
+
+            // Shift it: left, top, right, bottom (in pixels)
+            int shiftLeft = 0;
+            int shiftTop = 100;   // move down a bit
+            int shiftRight = 0;
+            int shiftBottom = 0;
+
+            layerDrawable.setLayerInset(0, shiftLeft, shiftTop, shiftRight, shiftBottom);
+
+            // Apply shifted arrow
+            getSupportActionBar().setHomeAsUpIndicator(layerDrawable);
+        }
+
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+
+        //final int leftPadding = (int) getResources().getDimension(R.dimen._10sdp);
 
         collapsingToolbar.setTitle(prgmNameList[posTitle]);
         //collapsingToolbar.setexp(R.drawable.rounded_corners);
@@ -321,8 +353,7 @@ public class Story extends AppCompatActivity implements TextToSpeech.OnInitListe
 
         final Typeface tf = ResourcesCompat.getFont(getApplicationContext(), R.font.angella);
         collapsingToolbar.setCollapsedTitleTypeface(tf);
-        collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
-        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
+
         collapsingToolbar.setExpandedTitleTypeface(tf);
 
         ImageView img = (ImageView) findViewById(R.id.header);
@@ -502,7 +533,7 @@ public class Story extends AppCompatActivity implements TextToSpeech.OnInitListe
         // "Use AdRequest.Builder.addTestDevice("ABCDE0123") to get test ads on this
         // device."
         RequestConfiguration configuration =
-                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("1902CEF7CBF449977CF2690AA1490571")).build();
+                new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("EBB40DF168323087C9461BE093AC4ED0")).build();
         MobileAds.initialize(Story.this,
                 new OnInitializationCompleteListener() {
                     @Override
